@@ -15,23 +15,8 @@ def predictDigit(image):
     pred = model.predict(img)
     return np.argmax(pred[0])
 
-# 🎨 Estilos personalizados
-st.set_page_config(page_title='🧮 Reconocimiento de Dígitos a Mano', layout='wide')
-
-st.markdown(
-    """
-    <style>
-    .stApp {
-        background-image: url("https://pbs.twimg.com/media/F2sr38KWYAAj0bc.jpg:large");
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
+# 🌐 Configuración general
+st.set_page_config(page_title='🧮 Reconocimiento de Dígitos', layout='wide')
 st.markdown("""
     <style>
     .stApp {
@@ -39,44 +24,40 @@ st.markdown("""
         color: white;
     }
     h1 {
-        font-size: 48px;
+        font-size: 42px;
         color: #FF3131;
+        text-shadow: 1px 1px 4px black;
         text-align: center;
-        text-shadow: 2px 2px 8px #000;
     }
     h3 {
         color: #FFAB00;
         text-align: center;
     }
-    .stSlider > div {
-        color: white;
+    .stSidebar {
+        background-color: rgba(30, 30, 30, 0.95);
     }
     .stButton > button {
         background-color: #FF3131;
         color: white;
         font-weight: bold;
-        border-radius: 10px;
+        border-radius: 8px;
         font-size: 16px;
-        padding: 10px 24px;
-    }
-    .stSidebar {
-        background-color: rgba(30, 30, 30, 0.9);
+        padding: 8px 20px;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# 🖋️ Encabezado
+# 🖋️ Título
 st.title("✍️ Reconocimiento de Dígitos Escritos a Mano")
 st.subheader("Cuando los que nos piden ayuda son niños muy pequeños, a veces dibujar los hace sentir mejor, pero no siempre entendemos qué quieren decir.")
 
-# 📏 Ajustes del canvas
+# 🎨 Parámetros del canvas
 stroke_width = st.slider("🖊️ Ancho del trazo", 1, 30, 15)
 stroke_color = "#FFFFFF"
 bg_color = "#000000"
 
-# 🎨 Canvas de dibujo
 canvas_result = st_canvas(
-    fill_color="rgba(255, 255, 255, 0.2)",  # color del relleno
+    fill_color="rgba(0, 0, 0, 0)",  # Sin fondo en el canvas
     stroke_width=stroke_width,
     stroke_color=stroke_color,
     background_color=bg_color,
@@ -86,7 +67,7 @@ canvas_result = st_canvas(
     key="canvas",
 )
 
-# 📤 Botón para predecir
+# 🧠 Botón de predicción
 if st.button("🔍 Predecir"):
     if canvas_result.image_data is not None:
         input_numpy_array = np.array(canvas_result.image_data)
@@ -94,16 +75,16 @@ if st.button("🔍 Predecir"):
         os.makedirs("prediction", exist_ok=True)
         input_image.save("prediction/img.png")
         img = Image.open("prediction/img.png")
-        result = predictDigit(img)
-        st.success(f"🧠 El dígito es: {result}")
+        res = predictDigit(img)
+        st.success(f"🧠 El dígito es: {res}")
     else:
         st.warning("✋ Por favor dibuja un dígito antes de predecir.")
 
-# ℹ️ Sidebar informativa
+# ℹ️ Sidebar
 st.sidebar.title("ℹ️ Acerca de esta app:")
 st.sidebar.markdown("""
-Esta aplicación utiliza una Red Neuronal Artificial (RNA)
-entrenada para reconocer dígitos escritos a mano usando TensorFlow.
+Esta aplicación utiliza una Red Neuronal entrenada con TensorFlow
+para reconocer dígitos escritos a mano.
 
 Aplicar esto en la app de FNSM fue una de nuestras más brillantes ideas.
 """)
